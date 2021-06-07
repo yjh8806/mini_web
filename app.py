@@ -1,11 +1,18 @@
 from flask import Flask, render_template, jsonify, request, session, redirect, url_for
+import requests
+from bs4 import BeautifulSoup
+# 순서 섞기 위해
+import random
 
+#############################
+# (입맛에 맞게 코딩)
+#############################
 app = Flask(__name__)
 
 from pymongo import MongoClient
 
 client = MongoClient('localhost', 27017)
-db = client.dbsparta_plus_week4
+db = client.NikeShoe
 
 # JWT 토큰을 만들 때 필요한 비밀문자열입니다. 아무거나 입력해도 괜찮습니다.
 # 이 문자열은 서버만 알고있기 때문에, 내 서버에서만 토큰을 인코딩(=만들기)/디코딩(=풀기) 할 수 있습니다.
@@ -20,7 +27,27 @@ import datetime
 # 회원가입 시엔, 비밀번호를 암호화하여 DB에 저장해두는 게 좋습니다.
 # 그렇지 않으면, 개발자(=나)가 회원들의 비밀번호를 볼 수 있으니까요.^^;
 import hashlib
+client = MongoClient('localhost', 27017)
+db = client.NikeShoe
 
+def shoes_data():
+    db.shoes.drop()
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+    data = requests.get('https://www.shoeprize.com/today/', headers=headers)
+    soup = BeautifulSoup(data.text, 'html.parser')
+
+    trs = soup.select('body > div.container > div.content > div.product_list_area.current_list > ul > li')
+    for tr in trs:
+        shop = tr.select_one('div.info_area > div.text_area > div.brand > a').text
+        shoe = tr.select_one('div.info_area > div.text_area > div.name').text
+        country = tr.select_one('div.info_area > div.text_area > div.delivery').text
+        doc = {
+            'shop': shop,
+            'shoe': shoe,
+            'country': country
+        }
+        db.shoes.insert_one(doc)
 
 #################################
 ##  HTML을 주는 부분             ##
@@ -128,6 +155,12 @@ def api_valid():
         return jsonify({'result': 'fail', 'msg': '로그인 시간이 만료되었습니다.'})
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
+
+@app.route('/api/list', methods=['GET'])
+def show_shoes():
+    shoes_data()
+    lists = list(db.shoes.find({}, {'_id': False}))
+    return jsonify({'result': 'success', 'all_lists': lists})
 
 
 if __name__ == '__main__':
