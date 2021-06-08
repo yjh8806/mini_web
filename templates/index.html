@@ -60,8 +60,8 @@
             display: block;
             margin: auto;
             object-fit: cover;
+            height: 260px;
             {#width: 100px;#}
-            {#height: 100px;#}
         }
 
         .card-title {
@@ -74,37 +74,78 @@
             color: red;
             font-weight: bold;
         }
+
+        .isotope-wrapper {
+            position: relative;
+            width: 100%;
+            margin: 0px 0px 0px 30px;
+        }
+        .isotope-toolbar input[type="radio"] {
+            display: none;
+        }
+        .isotope-toolbar span {
+            text-transform: capitalize;
+            display: inline-block;
+            margin-right: 15px;
+            padding-bottom: 3px;
+            font-size: 16px;
+            font-weight: 700;
+            border-bottom: 2px solid transparent;
+            {#transform: ease-in-out 0.5s;#}
+            cursor: pointer;
+        }
+        .isotope-toolbar input[type="radio"]:checked + span {
+            color: #a43f49;
+            border-bottom: 2px solid #a43f49;
+        }
+        .isotope-toolbar {
+            text-align: center;
+            margin: 0px 70px 20px 0px;
+        }
+
+        .isotope-toolbar p {
+            border-top: 1px solid #fff;
+            padding-top: 15px;
+        }
+
+        .isotope-toolbar a {
+            color: #fff;
+        }
     </style>
 
     <script>
         // 웹 실행 시 작동
         $(document).ready(function() {
-            $('#card_list').html("")
             shoeslist()
         })
-        // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
-        function logout() {
-            $.removeCookie('mytoken');
-            alert('로그아웃!')
+
+        $("#logout_btn").click(function() {
+            $.removeCookie("mytoken");
+            alert('로그아웃!');
             window.location.href = '/login'
-        }
+        })
+
 
         function shoeslist() {
             $.ajax({
                 type: "GET",
-                url: "/api/list",
+                url: "/api/list/new",
                 data: {},
                 success: function (response) {
                     if (response['result'] == 'success') {
+                        $('#card_list').html("")
                         let lists = response['all_lists']
-                        console.log(lists)
                         for(let i = 0; i < lists.length; i++) {
+                            let image = lists[i]['image']
                             let shop = lists[i]['shop']
                             let shoe = lists[i]['shoe']
                             let country = lists[i]['country']
+                            let link = lists[i]['link']
 
                             let temp_html = `<div class="card">
-                                                <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
+                                                <img class="card-img-top"
+                                                     onclick="window.open('https://www.shoeprize.com'+'${link}')"
+                                                     src=${image} alt="Card image cap">
                                                 <div class="card-body">
                                                     <h5 class="card-title">${shop}</h5>
                                                     <p class="card-text">${shoe}</p>
@@ -121,6 +162,49 @@
             })
         }
 
+        function old_shoeslist() {
+            $.ajax({
+                type: "GET",
+                url: "/api/list/ended",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        $('#card_list').html("")
+                        let lists2 = response['all_lists2']
+                        for (let i = 0; i < lists2.length; i++) {
+                            let old_image = lists2[i]['image']
+                            let old_shop = lists2[i]['shop']
+                            let old_shoe = lists2[i]['shoe']
+                            let old_country = lists2[i]['country']
+                            let old_link = lists2[i]['link']
+
+                            let temp_html2 = `<div class="card">
+                                                <img class="card-img-top"
+
+                                                     onclick="window.open('https://www.shoeprize.com'+'${old_link}')"
+                                                     src=${old_image} alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${old_shop}</h5>
+                                                    <p class="card-text">${old_shoe}</p>
+                                                    <p class="card-country">${old_country}</p>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <small class="text-muted">00:00:00초 후 종료</small>
+                                                </div>
+                                            </div>`
+                            $('#card_list').append(temp_html2)
+                        }
+                    }
+                }
+            })
+        }
+        // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
+        function logout() {
+            $.removeCookie('mytoken')
+            alert('로그아웃!')
+            window.location.href = '/login'
+        }
+
     </script>
 </head>
 <body>
@@ -128,8 +212,34 @@
     <div style="width: 100%; height: 100px; font-size: 50px; text-align: center; font-weight: bold;">
         Good NewShoe
     </div>
-    <button style="float: right;" class="button is-danger" onclick="logout()">로그아웃하기</button>
+    <button class="btn btn-primary" onclick="location.href='mypage.html'">마이페이지</button>
+    <button style="float: right;" class="button is-danger" id="logout_btn" onclick="logout()">로그아웃하기</button>
     <hr style="border: 2px solid black"/>
+    <div class="isotope-wrapper">
+            <form class="isotope-toolbar">
+                <label class="radio_label"
+                       onclick="shoeslist()"
+                       id="new_btn"
+                ><input
+                        type="radio"
+                        data-type="*"
+                        checked=""
+                        name="isotope-filter"
+                />
+                    <span>진행 중인 상품</span></label
+                >
+                <label class="radio_label"
+                       onclick="old_shoeslist()"
+                       id="old_btn"
+                ><input
+                        type="radio"
+                        data-type="ended"
+                        name="isotope-filter"
+                />
+                    <span>종료된 상품</span></label
+                >
+            </form>
+        </div>
     <div id="card_list" class="card-deck">
         <div class="card">
             <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
@@ -164,5 +274,7 @@
             </div>
         </div>
     </div>
+
+    <script src="static/js/isotope.min.js"></script>
 </body>
 </html>
