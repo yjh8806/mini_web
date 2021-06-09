@@ -236,5 +236,25 @@ def show_scrapmyshoes():
     scrap_list = list(db.myshoes.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_list3': scrap_list})
 
+@app.route('/api/mypage/myold', methods=['GET'])
+def show_scrapmyoldshoes():
+    scrap_list = list(db.oldmyshoes.find({}, {'_id': False}))
+    return jsonify({'result': 'success', 'all_list3': scrap_list})
+
+# mypage.html 스크랩 삭제 API
+@app.route('/api/mypage/delmine', methods=['POST'])
+def delete_myshoes():
+    image_receive = request.form['image_give']
+    shop_receive = request.form['shop_give']
+    shoe_receive = request.form['shoe_give']
+    country_receive = request.form['country_give']
+    link_receive = request.form['link_give']
+    db.myshoes.delete_one({'image': image_receive,
+                           'shop': shop_receive,
+                           'shoe': shoe_receive,
+                           'country': country_receive,
+                           'link': link_receive})
+    return jsonify({'result': 'success'})
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

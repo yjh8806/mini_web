@@ -120,6 +120,7 @@
                 <span>스크랩 목록(진행 중)</span></label
             >
             <label class="radio_label"
+                   onclick="scrapMyOldShoes()"
             ><input
                     type="radio"
                     data-type="ended"
@@ -137,6 +138,32 @@
         $(document).ready(function () {
             scrapMyShoes()
         })
+
+
+        function delShoes(image,shop,shoe,country,link) {
+            $.ajax({
+                type: "POST",
+                url: "/api/mypage/delmine",
+                data: {
+                    image_give: image,
+                    shop_give: shop,
+                    shoe_give: shoe,
+                    country_give: country,
+                    link_give: link,
+                    {#image_give: document.querySelector(`#${id} #my_img`).getAttribute("src"),#}
+                    {#shop_give: document.querySelector(`#${id} #my_shop`).textContent,#}
+                    {#shoe_give: document.querySelector(`#${id} #my_shoe`).textContent,#}
+                    {#country_give: document.querySelector(`#${id} #my_country`).textContent,#}
+                    {#link_give: document.querySelector(`#${id} #my_img`).getAttribute("onclick"),#}
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("삭제되었습니다.")
+                        window.location.replace('/mypage')
+                    }
+                }
+            })
+        }
 
         function scrapMyShoes() {
             $.ajax({
@@ -162,6 +189,56 @@
                                                     <h5 id="my_shop" class="card-title">${shop}</h5>
                                                     <p id="my_shoe" class="card-text">${shoe}</p>
                                                     <p id="my_country" class="card-country">${country}</p>
+                                                    <button style="float: right;" onclick="delShoes()">삭제</button>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <small class="text-muted">00:00:00초 후 종료</small>
+                                                </div>
+                                            </div>`
+                            $('#card_list').append(temp_html)
+                        }document.querySelectorAll(".card").forEach(function (c){
+                            const image_source = c.querySelector("img").getAttribute("src")
+                            const shop_source = c.querySelector("h5").textContent
+                            const shoe_source = c.querySelectorAll("p")[0].textContent
+                            const country_source = c.querySelectorAll("p")[1].textContent
+                            const link_source = c.querySelector("img").getAttribute("onclick").slice(13,-2)
+                            c.querySelector("button").addEventListener("click", function (){
+                                delShoes(image_source,shop_source,shoe_source,country_source,link_source)
+
+                            })
+                        })
+                    }
+                }
+            })
+        }
+
+
+
+        function scrapMyOldShoes() {
+            $.ajax({
+                type: "GET",
+                url: "/api/mypage/myold",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        $('#card_list').html("")
+                        let lists = response['all_list3']
+                        for (let i = 0; i < lists.length; i++) {
+                            let old_image = lists[i]['image']
+                            let old_shop = lists[i]['shop']
+                            let old_shoe = lists[i]['shoe']
+                            let old_country = lists[i]['country']
+                            let old_link = lists[i]['link']
+
+                            let temp_html = `<div class="card">
+                                                <img id="my_img" class="card-img-top"
+                                                     onclick="window.open('https://www.shoeprize.com'+'${old_link}')"
+                                                     src=${old_image} alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h5 id="my_shop" class="card-title">${old_shop}</h5>
+                                                    <p id="my_shoe" class="card-text">${old_shoe}</p>
+                                                    <p id="my_country" class="card-country">${old_country}</p>
+                                                    <button style="float: right;">삭제</button>
                                                 </div>
                                                 <div class="card-footer">
                                                     <small class="text-muted">00:00:00초 후 종료</small>
@@ -173,6 +250,10 @@
                 }
             })
         }
+
+
+
+
         // 순수 자바스크립트 로그아웃 구현
         const logoutBtn = document.querySelector('.logoutBtn');
         logoutBtn.addEventListener('click', () => {
