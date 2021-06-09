@@ -51,7 +51,15 @@ def register():
 
 @app.route('/mypage')
 def mypage():
-    return render_template('mypage.html')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.user.find_one({"id": payload['id']})
+        return render_template('mypage.html', nickname=user_info["nick"])
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login"))
 
 #################################
 ##  로그인을 위한 API            ##
@@ -132,7 +140,7 @@ def api_valid():
     except jwt.exceptions.DecodeError:
         return jsonify({'result': 'fail', 'msg': '로그인 정보가 존재하지 않습니다.'})
 
-# 메인페이지
+# 메인페이지(DB)
 def shoes_data():
     db.shoes.remove({})
     headers = {
@@ -179,8 +187,8 @@ def oldShoes_data():
         }
         db.old_shoes.insert_one(doc)
 
-#################################
-##  HTML을 주는 부분             ##
+###################################
+##  index.html 연결 API을 주는 부분  ##
 
 @app.route('/api/list/new', methods=['GET'])
 def show_shoes():
@@ -194,7 +202,7 @@ def show_oldShoes():
     lists_2 = list(db.old_shoes.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_lists2': lists_2})
 
-@app.route('/api/mypage/list', methods=['POST'])
+@app.route('/api/list/mine', methods=['POST'])
 def show_myshoes():
     image_receive = request.form['image_give']
     shop_receive = request.form['shop_give']
@@ -208,9 +216,24 @@ def show_myshoes():
                            'link': link_receive})
     return jsonify({'result': 'success'})
 
+@app.route('/api/list/oldmine', methods=['POST'])
+def show_oldmyshoes():
+    image_receive = request.form['image_give']
+    shop_receive = request.form['shop_give']
+    shoe_receive = request.form['shoe_give']
+    country_receive = request.form['country_give']
+    link_receive = request.form['link_give']
+    db.oldmyshoes.insert_one({'image': image_receive,
+                              'shop': shop_receive,
+                              'shoe': shoe_receive,
+                              'country': country_receive,
+                              'link': link_receive})
+    return jsonify({'result': 'success'})
+
+# mypage.html 연결 API
 @app.route('/api/mypage/mynew', methods=['GET'])
 def show_scrapmyshoes():
-    scrap_list = list(db.myshoes.find({}, {'id': False}))
+    scrap_list = list(db.myshoes.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_list3': scrap_list})
 
 if __name__ == '__main__':

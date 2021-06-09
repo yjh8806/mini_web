@@ -140,18 +140,21 @@
         // 웹 실행 시 작동
         $(document).ready(function () {
             shoeslist()
+            document.querySelectorAll("card").forEach(function (c){
+                console.log(c)
+            })
         })
 
-        function myShoes(id) {
+        function myShoes(image,shop,shoe,country,link) {
             $.ajax({
                 type: "POST",
-                url: "/api/mypage/list",
+                url: "/api/list/mine",
                 data: {
-                    {#image_give: $('#my_img').attr("src"),#}
-                    {#shop_give: $('#my_shop').text(),#}
-                    {#shoe_give: $('#my_shoe').text(),#}
-                    {#country_give: $('#my_country').text(),#}
-                    {#link_give: $('#my_img').attr("onclick"),#}
+                    image_give: image,
+                    shop_give: shop,
+                    shoe_give: shoe,
+                    country_give: country,
+                    link_give: link,
                     {#image_give: document.querySelector(`#${id} #my_img`).getAttribute("src"),#}
                     {#shop_give: document.querySelector(`#${id} #my_shop`).textContent,#}
                     {#shoe_give: document.querySelector(`#${id} #my_shoe`).textContent,#}
@@ -198,7 +201,40 @@
                                                 </div>
                                             </div>`
                             $('#card_list').append(temp_html)
-                        }
+                        }document.querySelectorAll(".card").forEach(function (c){
+                            const image_source = c.querySelector("img").getAttribute("src")
+                            const shop_source = c.querySelector("h5").textContent
+                            const shoe_source = c.querySelectorAll("p")[0].textContent
+                            const country_source = c.querySelectorAll("p")[1].textContent
+                            const link_source = c.querySelector("img").getAttribute("onclick").slice(13,-2)
+                            c.querySelector("button").addEventListener("click", function (){
+                                myShoes(image_source,shop_source,shoe_source, country_source, link_source)
+
+                            })
+                        })
+                    }
+                }
+            })
+        }
+        function oldmyShoes(image,shop,shoe,country,link) {
+            $.ajax({
+                type: "POST",
+                url: "/api/list/oldmine",
+                data: {
+                    image_give: image,
+                    shop_give: shop,
+                    shoe_give: shoe,
+                    country_give: country,
+                    link_give: link,
+                    {#image_give: document.querySelector(`#${id} #my_img`).getAttribute("src"),#}
+                    {#shop_give: document.querySelector(`#${id} #my_shop`).textContent,#}
+                    {#shoe_give: document.querySelector(`#${id} #my_shoe`).textContent,#}
+                    {#country_give: document.querySelector(`#${id} #my_country`).textContent,#}
+                    {#link_give: document.querySelector(`#${id} #my_img`).getAttribute("onclick"),#}
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("스크랩이 완료되었습니다.")
                     }
                 }
             })
@@ -235,7 +271,16 @@
                                                 </div>
                                             </div>`
                             $('#card_list').append(temp_html2)
-                        }
+                        }document.querySelectorAll(".card").forEach(function (c){
+                            const image_source = c.querySelector("img").getAttribute("src")
+                            const shop_source = c.querySelector("h5").textContent
+                            const shoe_source = c.querySelectorAll("p")[0].textContent
+                            const country_source = c.querySelectorAll("p")[1].textContent
+                            const link_source = c.querySelector("img").getAttribute("onclick").slice(13,-2)
+                            c.querySelector("button").addEventListener("click", function (){
+                                oldmyShoes(image_source,shop_source,shoe_source, country_source, link_source)
+                            })
+                        })
                     }
                 }
             })
@@ -259,9 +304,7 @@
             window.location.replace('/');
         })
 
-        document.querySelectorAll("card").forEach(function (c){
-            console.log(c)
-        })
+
     </script>
 </body>
 </html>
