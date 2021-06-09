@@ -134,28 +134,7 @@
             </form>
     </div>
     <div id="card_list" class="card-deck">
-        <div class="card">
-            <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                    content. This content is a little bit longer.</p>
-                <button>스크랩하기</button>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">00:00:00초 후 종료</small>
-            </div>
-        </div>
-        <div class="card">
-            <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This card has supporting text below as a natural lead-in to additional content.</p>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">00:00:00초 후 종료</small>
-            </div>
-        </div>
+
     </div>
     <script>
         // 웹 실행 시 작동
@@ -198,7 +177,7 @@
                             let shoe = lists[i]['shoe']
                             let country = lists[i]['country']
                             let link = lists[i]['link']
-
+                            {# 스크랩하기 ONCLICK #}
                             let temp_html = `<div class="card">
                                                 <img id="my_img" class="card-img-top"
                                                      onclick="window.open('https://www.shoeprize.com'+'${link}')"
@@ -207,7 +186,7 @@
                                                     <h5 id="my_shop" class="card-title">${shop}</h5>
                                                     <p id="my_shoe" class="card-text">${shoe}</p>
                                                     <p id="my_country" class="card-country">${country}</p>
-                                                    <button id="btn_${i}" style="float: right;" onclick="myShoes()">스크랩하기</button>
+                                                    <button style="float: right;" onclick="myShoes()">스크랩하기</button>
                                                 </div>
                                                 <div class="card-footer">
                                                     <small class="text-muted">00:00:00초 후 종료</small>

@@ -119,7 +119,7 @@
                     checked=""
                     name="isotope-filter"
             />
-                <span>스크랩 상품 목록</span></label
+                <span>스크랩 목록(진행 중)</span></label
             >
             <label class="radio_label"
             ><input
@@ -127,27 +127,55 @@
                     data-type="ended"
                     name="isotope-filter"
             />
-                <span>종료된 상품</span></label
+                <span>스크랩 목록(종료)</span></label
             >
         </form>
     </div>
     <div id="card_list" class="card-deck">
-        <div class="card">
-            <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title">Card title</h5>
-                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                    content. This content is a little bit longer.</p>
-                <button>스크랩 삭제</button>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">00:00:00초 후 종료</small>
-            </div>
-        </div>
+
     </div>
 
     <script src="static/js/isotope.min.js"></script>
     <script>
+        // 웹 실행 시 작동
+        $(document).ready(function () {
+            scrapMyShoes()
+        })
+
+        function scrapMyShoes() {
+            $.ajax({
+                type: "GET",
+                url: "/api/mypage/mynew",
+                data: {},
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        let lists = response['all_lists']
+                        for (let i = 0; i < lists.length; i++) {
+                            let image = lists[i]['image']
+                            let shop = lists[i]['shop']
+                            let shoe = lists[i]['shoe']
+                            let country = lists[i]['country']
+                            let link = lists[i]['link']
+
+                            let temp_html = `<div class="card">
+                                                <img id="my_img" class="card-img-top"
+                                                     onclick="window.open('https://www.shoeprize.com'+'${link}')"
+                                                     src=${image} alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h5 id="my_shop" class="card-title">${shop}</h5>
+                                                    <p id="my_shoe" class="card-text">${shoe}</p>
+                                                    <p id="my_country" class="card-country">${country}</p>
+                                                    <button style="float: right;" onclick="myShoes()">스크랩하기</button>
+                                                </div>
+                                                <div class="card-footer">
+                                                    <small class="text-muted">00:00:00초 후 종료</small>
+                                                </div>
+                                            </div>`
+                            $('#card_list').append(temp_html)
+                    }
+                }
+            })
+        }
         // 순수 자바스크립트 로그아웃 구현
         const logoutBtn = document.querySelector('.logoutBtn');
         logoutBtn.addEventListener('click', () => {

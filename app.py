@@ -206,8 +206,12 @@ def show_myshoes():
                            'shoe': shoe_receive,
                            'country': country_receive,
                            'link': link_receive})
-    lists3 = list(db.myshoes.find({}, {'id': False}))
-    return jsonify({'result': 'success', 'all_myshoes': lists3})
+    return jsonify({'result': 'success'})
+
+@app.route('/api/mypage/mynew', methods=['GET'])
+def show_scrapmyshoes():
+    scrap_list = list(db.myshoes.find({}, {'id': False}))
+    return jsonify({'result': 'success', 'all_list3': scrap_list})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
