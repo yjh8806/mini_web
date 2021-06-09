@@ -142,16 +142,21 @@
             shoeslist()
         })
 
-        function myShoes() {
+        function myShoes(id) {
             $.ajax({
                 type: "POST",
                 url: "/api/mypage/list",
                 data: {
-                    image_give: $('#my_img').attr("src"),
-                    shop_give: $('#my_shop').text(),
-                    shoe_give: $('#my_shoe').text(),
-                    country_give: $('#my_country').text(),
-                    link_give: $('#my_img').attr("onclick"),
+                    {#image_give: $('#my_img').attr("src"),#}
+                    {#shop_give: $('#my_shop').text(),#}
+                    {#shoe_give: $('#my_shoe').text(),#}
+                    {#country_give: $('#my_country').text(),#}
+                    {#link_give: $('#my_img').attr("onclick"),#}
+                    {#image_give: document.querySelector(`#${id} #my_img`).getAttribute("src"),#}
+                    {#shop_give: document.querySelector(`#${id} #my_shop`).textContent,#}
+                    {#shoe_give: document.querySelector(`#${id} #my_shoe`).textContent,#}
+                    {#country_give: document.querySelector(`#${id} #my_country`).textContent,#}
+                    {#link_give: document.querySelector(`#${id} #my_img`).getAttribute("onclick"),#}
                 },
                 success: function (response) {
                     if (response['result'] == 'success') {
@@ -170,7 +175,7 @@
                     if (response['result'] == 'success') {
                         $('#card_list').html("")
                         let lists = response['all_lists']
-                        console.log(lists)
+                        {#console.log(lists)#}
                         for (let i = 0; i < lists.length; i++) {
                             let image = lists[i]['image']
                             let shop = lists[i]['shop']
@@ -186,7 +191,7 @@
                                                     <h5 id="my_shop" class="card-title">${shop}</h5>
                                                     <p id="my_shoe" class="card-text">${shoe}</p>
                                                     <p id="my_country" class="card-country">${country}</p>
-                                                    <button style="float: right;" onclick="myShoes()">스크랩하기</button>
+                                                    <button style="float: right;">스크랩하기</button>
                                                 </div>
                                                 <div class="card-footer">
                                                     <small class="text-muted">00:00:00초 후 종료</small>
@@ -254,6 +259,9 @@
             window.location.replace('/');
         })
 
+        document.querySelectorAll("card").forEach(function (c){
+            console.log(c)
+        })
     </script>
 </body>
 </html>
