@@ -175,6 +175,7 @@ def oldShoes_data():
             'link': link,
         }
         db.old_shoes.insert_one(doc)
+
 #################################
 ##  HTML을 주는 부분             ##
 
@@ -189,6 +190,10 @@ def show_oldShoes():
     oldShoes_data()
     lists_2 = list(db.old_shoes.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_lists2': lists_2})
+
+@app.route('/mypage')
+def mypage():
+    return render_template('mypage.html')
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
