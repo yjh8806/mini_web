@@ -36,19 +36,22 @@ def home():
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
-        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+        return redirect(url_for("login"))
 
 
 @app.route('/login')
 def login():
-    msg = request.args.get("msg")
-    return render_template('login.html', msg=msg)
+    # msg = request.args.get("msg")
+    return render_template('login.html')
 
 
 @app.route('/register')
 def register():
     return render_template('register.html')
 
+@app.route('/mypage')
+def mypage():
+    return render_template('mypage.html')
 
 #################################
 ##  로그인을 위한 API            ##
@@ -80,7 +83,7 @@ def api_login():
     # 회원가입 때와 같은 방법으로 pw를 암호화합니다.
     pw_hash = hashlib.sha256(pw_receive.encode('utf-8')).hexdigest()
 
-    # id, 암호화된pw을 가지고 해당 유저를 찾습니다.
+    # id, 암호화된 pw을 가지고 해당 유저를 찾습니다.
     result = db.user.find_one({'id': id_receive, 'pw': pw_hash})
 
     # 찾으면 JWT 토큰을 만들어 발급합니다.

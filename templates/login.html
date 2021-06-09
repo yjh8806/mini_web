@@ -29,15 +29,16 @@
                 $.ajax({
                     type: "POST",
                     url: "/api/login",
-                    data: {id_give: $('#userid').val(), pw_give: $('#userpw').val()},
+                    data: {id_give: $('#userid').val(),
+                           pw_give: $('#userpw').val()},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             // 로그인이 정상적으로 되면, 토큰을 받아옵니다.
                             // 이 토큰을 mytoken이라는 키 값으로 쿠키에 저장합니다.
-                            $.cookie('mytoken', response['token']);
+                            $.cookie('mytoken', response['token'], {path: '/'});
 
-                            alert('로그인 완료!')
-                            window.location.href = '/'
+                            alert('로그인이 완료되었습니다!')
+                            window.location.replace('/')
                         } else {
                             // 로그인이 안되면 에러메시지를 띄웁니다.
                             alert(response['msg'])
@@ -46,6 +47,22 @@
                 })
             }
 
+            function is_login() {
+                $.ajax({
+                    type: "POST",
+                    url: "/login",
+                    data: {
+                        id_give: $('#userid').val(),
+                        pw_give: $('#userpw').val()
+                    },
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            alert('로그인 된 계정입니다!')
+
+                        }
+                    }
+                })
+            }
         </script>
 
     </head>
@@ -79,6 +96,7 @@
                     </div>
                 </div>
                 <button class="button is-primary" onclick="login()">로그인</button>
+                <button class="button is-primary" onclick="location.href='/register'">회원가입</button>
             </div>
         </div>
     </body>
