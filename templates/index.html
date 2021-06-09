@@ -123,17 +123,6 @@
             shoeslist()
         })
 
-<<<<<<< HEAD
-=======
-        {#$("#logout_btn").click(function() {#}
-        {#    $.removeCookie("mytoken");#}
-        {#    alert('로그아웃!');#}
-        {#    window.location.href = '/login'#}
-        {#})
-        #}
-
-
->>>>>>> 4807532ee4ca7df29037919c058116ad09bf52a6
         function shoeslist() {
             $.ajax({
                 type: "GET",
@@ -220,7 +209,6 @@
     </script>
 </head>
 <body>
-<<<<<<< HEAD
     <div style="width: 100%; height: 100px; font-size: 50px; text-align: center; font-weight: bold;">
         Good NewShoe
     </div>
@@ -252,7 +240,7 @@
                     <span>종료된 상품</span></label
                 >
             </form>
-        </div>
+    </div>
     <div id="card_list" class="card-deck">
         <div class="card">
             <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
@@ -260,6 +248,7 @@
                 <h5 class="card-title">Card title</h5>
                 <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
                     content. This content is a little bit longer.</p>
+                <button>스크랩하기</button>
             </div>
             <div class="card-footer">
                 <small class="text-muted">00:00:00초 후 종료</small>
@@ -274,54 +263,8 @@
             <div class="card-footer">
                 <small class="text-muted">00:00:00초 후 종료</small>
             </div>
-=======
-{#    <h5 class="subtitle">어서오세요! {{nickname}}님</h5>#}
-<div style="width: 100%; height: 100px; font-size: 50px; text-align: center; font-weight: bold;">
-    Good NewShoe
-</div>
-<button style="float:right;" class="btn btn-primary" onclick="location.href='/mypage'">마이페이지</button>
-<button style="float: right;" class="button is-danger" id="logout_btn" onclick="logout()">로그아웃하기</button>
-<hr style="border: 2px solid black"/>
-<div class="isotope-wrapper">
-    <form class="isotope-toolbar">
-        <label class="radio_label"
-               onclick="shoeslist()"
-               id="new_btn"
-        ><input
-                type="radio"
-                data-type="*"
-                checked=""
-                name="isotope-filter"
-        />
-            <span>진행 중인 상품</span></label
-        >
-        <label class="radio_label"
-               onclick="old_shoeslist()"
-               id="old_btn"
-        ><input
-                type="radio"
-                data-type="ended"
-                name="isotope-filter"
-        />
-            <span>종료된 상품</span></label
-        >
-    </form>
-</div>
-<div id="card_list" class="card-deck">
-    <div class="card">
-        <img class="card-img-top" src="static/images/common-5.jpeg" alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title">Card title</h5>
-            <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional
-                content. This content is a little bit longer.</p>
-            <button>스크랩하기</button>
->>>>>>> 4807532ee4ca7df29037919c058116ad09bf52a6
-        </div>
-        <div class="card-footer">
-            <small class="text-muted">00:00:00초 후 종료</small>
         </div>
     </div>
-</div>
 
 <script src="static/js/isotope.min.js"></script>
 </body>
