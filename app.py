@@ -187,6 +187,27 @@ def oldShoes_data():
         }
         db.old_shoes.insert_one(doc)
 
+def notices_data():
+    db.notices.remove({})
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+    data = requests.get('https://www.shoeprize.com/shoeprize/?p=0', headers=headers)
+    soup = BeautifulSoup(data.text, 'html.parser')
+    notices = soup.select('body > div.container > div.content > ul > li')
+    for notice in notices:
+        image = notice.select_one('a > div.img_area > img')['data-src']
+        title = notice.select_one('a > div.info_area > div.post_title').text
+        content = notice.select_one('a > div.info_area > div.post_content').text
+        info = notice.select_one('a > div.info_area > div.detail_info').text
+        link = notice.select_one('a')['href']
+        doc = {
+            'image': image,
+            'title': title,
+            'content': content,
+            'info': info,
+            'link': link,
+        }
+        db.notices.insert_one(doc)
 ###################################
 ##  index.html 연결 API을 주는 부분  ##
 
@@ -202,6 +223,13 @@ def show_oldShoes():
     lists_2 = list(db.old_shoes.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_lists2': lists_2})
 
+@app.route('/api/list/event', methods=['GET'])
+def show_notices():
+    notices_data()
+    lists_3 = list(db.notices.find({}, {'_id': False}))
+    return jsonify({'result': 'success', 'all_lists3': lists_3})
+
+# 마이페이지 스크랩
 @app.route('/api/list/mine', methods=['POST'])
 def show_myshoes():
     image_receive = request.form['image_give']
@@ -230,6 +258,19 @@ def show_oldmyshoes():
                               'link': link_receive})
     return jsonify({'result': 'success'})
 
+@app.route('/api/list/myevent')
+def show_mynotices():
+    image_receive = request.form['image_give']
+    title_receive = request.form['title_give']
+    content_receive = request.form['content_give']
+    info_receive = request.form['info_give']
+    link_receive = request.form['link_give']
+    db.mynotices.insert_one({'image': image_receive,
+                              'title': title_receive,
+                              'content': content_receive,
+                              'info': info_receive,
+                              'link': link_receive})
+    return jsonify({'result': 'success'})
 # mypage.html 연결 API
 @app.route('/api/mypage/mynew', methods=['GET'])
 def show_scrapmyshoes():
@@ -242,18 +283,26 @@ def show_scrapmyoldshoes():
     return jsonify({'result': 'success', 'all_list3': scrap_list})
 
 # mypage.html 스크랩 삭제 API
-@app.route('/api/mypage/delmine', methods=['POST'])
+@app.route('/api/mypage/noshoes', methods=['POST'])
 def delete_myshoes():
-    image_receive = request.form['image_give']
     shop_receive = request.form['shop_give']
     shoe_receive = request.form['shoe_give']
     country_receive = request.form['country_give']
-    link_receive = request.form['link_give']
-    db.myshoes.delete_one({'image': image_receive,
-                           'shop': shop_receive,
-                           'shoe': shoe_receive,
-                           'country': country_receive,
-                           'link': link_receive})
+
+    db.myshoes.remove({'shop': shop_receive,
+                       'shoe': shoe_receive,
+                       'country': country_receive})
+    return jsonify({'result': 'success'})
+
+@app.route('/api/mypage/nooldshoes', methods=['POST'])
+def delete_myoldshoes():
+    shop_receive = request.form['shop_give']
+    shoe_receive = request.form['shoe_give']
+    country_receive = request.form['country_give']
+
+    db.oldmyshoes.remove({'shop': shop_receive,
+                          'shoe': shoe_receive,
+                          'country': country_receive})
     return jsonify({'result': 'success'})
 
 if __name__ == '__main__':

@@ -39,12 +39,22 @@
             margin: 0px 10px 10px 0px !important;
         }
 
+        #card {
+            width: 400px!important;
+            height: 600px!important;
+        }
         .card-img-top {
             display: block;
             margin: auto;
             object-fit: cover;
             height: 260px;
         {#width: 100px;#}
+        }
+        #eventimg {
+            display: block!important;
+            margin: auto!important;
+            object-fit: cover!important;
+            height: 260px!important;
         }
 
         .card-title {
@@ -131,6 +141,16 @@
                 />
                     <span>종료된 상품</span></label
                 >
+                <label class="radio_label"
+                       onclick="event_list()"
+                       id="old_btn"
+                ><input
+                        type="radio"
+                        data-type="event"
+                        name="isotope-filter"
+                />
+                    <span>이벤트</span></label
+                >
             </form>
     </div>
     <div id="card_list" class="card-deck">
@@ -216,6 +236,7 @@
                 }
             })
         }
+
         function oldmyShoes(image,shop,shoe,country,link) {
             $.ajax({
                 type: "POST",
@@ -287,6 +308,70 @@
             })
         }
 
+        function myevent(image,title,content,info,link) {
+            $.ajax({
+                type: "POST",
+                url: "/api/list/myevent",
+                data: {
+                    image_give: image,
+                    title_give: title,
+                    content_give: content,
+                    info_give: info,
+                    link_give: link,
+                    {#image_give: document.querySelector(`#${id} #my_img`).getAttribute("src"),#}
+                    {#shop_give: document.querySelector(`#${id} #my_shop`).textContent,#}
+                    {#shoe_give: document.querySelector(`#${id} #my_shoe`).textContent,#}
+                    {#country_give: document.querySelector(`#${id} #my_country`).textContent,#}
+                    {#link_give: document.querySelector(`#${id} #my_img`).getAttribute("onclick"),#}
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert("스크랩이 완료되었습니다.")
+                    }
+                }
+            })
+        }
+
+        function event_list() {
+            $.ajax({
+                type: "GET",
+                url: "/api/list/event",
+                data: {},
+                success: function (response) {
+                    $('#card_list').html("")
+                    let lists3 = response['all_lists3']
+                    for (let i = 0; i < lists3.length; i++){
+                        let ev_image = lists3[i]['image']
+                        let ev_title = lists3[i]['title']
+                        let ev_content = lists3[i]['content']
+                        let ev_info = lists3[i]['info']
+                        let ev_link = lists3[i]['link']
+                        let temp_html3 = `<div id="eventcard" class="card" style="width: 370px; height: 600px">
+                                                <img id="eventimg"
+                                                     class="card-img-top"
+                                                     onclick="window.open('https://www.shoeprize.com/shoeprize/?p=0'+'${ev_link}')"
+                                                     src=${ev_image} alt="Card image cap">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">${ev_title}</h5>
+                                                    <p class="card-text">${ev_content}</p>
+                                                    <p class="card-text">${ev_info}</p>
+                                                    <button style="float: right;">스크랩하기</button>
+                                                </div>
+                                            </div>`
+                        $('#card_list').append(temp_html3)
+                    }document.querySelectorAll(".card").forEach(function (c){
+                        const image_source = c.querySelector("img").getAttribute("src")
+                        const title_source = c.querySelector("h5").textContent
+                        const content_source = c.querySelectorAll("p")[0].textContent
+                        const info_source = c.querySelectorAll("p")[1].textContent
+                        const link_source = c.querySelector("img").getAttribute("onclick").slice(13,-2)
+                        c.querySelector("button").addEventListener("click", function (){
+                            oldmyShoes(image_source,title_source,content_source, info_source, link_source)
+                        })
+                    })
+                }
+            })
+        }
 
         // 로그아웃은 내가 가지고 있는 토큰만 쿠키에서 없애면 됩니다.
         {#function logout() {#}
