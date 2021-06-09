@@ -37,7 +37,11 @@
                     }
                 })
             }
-
+            function enterkey() {
+                if(window.event.keyCode === 13) {
+                    register();
+                }
+            }
         </script>
     </head>
     <body>
@@ -76,7 +80,7 @@
                     <div class="field-body">
                         <div class="field">
                             <div class="control">
-                                <input type="text" class="input" id="usernick" placeholder="My Nickname">
+                                <input onkeyup="enterkey();" type="text" class="input" id="usernick" placeholder="My Nickname">
                             </div>
                         </div>
                     </div>
