@@ -194,5 +194,20 @@ def show_oldShoes():
     lists_2 = list(db.old_shoes.find({}, {'_id': False}))
     return jsonify({'result': 'success', 'all_lists2': lists_2})
 
+@app.route('/api/mypage/list', methods=['POST'])
+def show_myshoes():
+    image_receive = request.form['image_give']
+    shop_receive = request.form['shop_give']
+    shoe_receive = request.form['shoe_give']
+    country_receive = request.form['country_give']
+    link_receive = request.form['link_give']
+    db.myshoes.insert_one({'image': image_receive,
+                           'shop': shop_receive,
+                           'shoe': shoe_receive,
+                           'country': country_receive,
+                           'link': link_receive})
+    lists3 = list(db.myshoes.find({}, {'id': False}))
+    return jsonify({'result': 'success', 'all_myshoes': lists3})
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

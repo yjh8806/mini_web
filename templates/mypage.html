@@ -1,19 +1,18 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <title>Hello, world!</title>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-    <!--    템플릿 적용 CSS / JS-->
+
+    <!-- fonts -->
     <link
             href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900"
             rel="stylesheet"
     />
-    <!-- Additional CSS Files -->
-
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
@@ -21,26 +20,8 @@
 
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-
-    {#    <link rel="stylesheet" href="{{ url_for('static', filename='css/flex-slider.css') }}">#}
-    <!-- Webpage Title -->
-    <title>Hello, world!</title>
-
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <!-- Bulma CSS -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-    <!-- JS -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-    <!-- jquery -->
-    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script src="static/js/isotope.min.js"></script>
 
     <style>
         .card-deck {
@@ -165,6 +146,15 @@
         </div>
     </div>
 
-<script src="static/js/isotope.min.js"></script>
+    <script src="static/js/isotope.min.js"></script>
+    <script>
+        // 순수 자바스크립트 로그아웃 구현
+        const logoutBtn = document.querySelector('.logoutBtn');
+        logoutBtn.addEventListener('click', () => {
+            document.cookie = 'mytoken=; expires=Mon, 01 Jan 1970 00:00:00 UTC;'
+            alert('로그아웃!');
+            window.location.replace('/');
+        })
+    </script>
 </body>
 </html>
