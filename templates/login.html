@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <title>Login</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="../static/styles.css">
+
+    <script>
+        {% if msg %}
+            alert("{{ msg }}")
+        {% endif %}
+
+        function login() {
+            $.ajax({
+                type: "POST",
+                url: "/api/login",
+                data: {
+                    id_give: $('#userid').val(),
+                    pw_give: $('#userpw').val()
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+
+                        $.cookie('mytoken', response['token'], {path: '/'});
+
+                        alert('로그인이 완료되었습니다!')
+                        window.location.replace('/')
+                    } else {
+                        alert(response['msg'])
+                    }
+                }
+            })
+        }
+
+        function enterkey() {
+            if (window.event.keyCode === 13) {
+                login();
+            }
+        }
+
+        function is_login() {
+            $.ajax({
+                type: "POST",
+                url: "/login",
+                data: {
+                    id_give: $('#userid').val(),
+                    pw_give: $('#userpw').val()
+                },
+                success: function (response) {
+                    if (response['result'] == 'success') {
+                        alert('로그인 된 계정입니다!')
+
+                    }
+                }
+            })
+        }
+    </script>
+
+
+</head>
+<body>
+    <div class="section has-text-centered">
+        <div class="container">
+            <div class="top-banner"><h2 class="top-logo">GoodNewShoe</h2>
+            </div>
+
+            <!--form-->
+
+            <form class="box col-md-6">
+                <h2 class="title">Log In</h2>
+
+                <div class="field is-horizontal">
+                    <!--<div class="field-label is-normal">
+                        <label class="label" for="userid">ID</label>
+                    </div>-->
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input type="text" class="input" id="userid" aria-describedby="emailHelp" placeholder="Enter ID">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <!--<div class="field-label is-normal">
+                        <label class="label" for="userpw">PW</label>
+                    </div>-->
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input onkeyup="enterkey();" type="password" class="input" id="userpw" placeholder="Enter Password">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button class="button btn" type="button" onclick="login()">로그인</button>  <!--로그인-->
+                <button class="button btn"
+                        type="button"
+                        onclick="location.href='/register'"
+                        style="margin-top: 0px;">회원가입</button> <!--회원가입-->
+            </form>
+        </div>
+    </div><!--end of container-->
+</body>
+</html>
