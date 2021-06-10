@@ -164,7 +164,7 @@
                                     const shop_source = c.querySelector("h5").textContent
                                     const shoe_source = c.querySelectorAll("p")[0].textContent
                                     const country_source = c.querySelectorAll("p")[1].textContent
-                                    const link_source = c.querySelector("img").getAttribute("onclick").slice(13, -2)
+                                    const link_source = c.querySelector("img").getAttribute("onclick").slice(-14, -2)
                                     c.querySelector("button").addEventListener("click", function () {
                                         myShoes(image_source, shop_source, shoe_source, country_source, link_source)
                                     })
@@ -235,7 +235,7 @@
                                     const shop_source = c.querySelector("h5").textContent
                                     const shoe_source = c.querySelectorAll("p")[0].textContent
                                     const country_source = c.querySelectorAll("p")[1].textContent
-                                    const link_source = c.querySelector("img").getAttribute("onclick").slice(13, -2)
+                                    const link_source = c.querySelector("img").getAttribute("onclick").slice(-14, -2)
                                     c.querySelector("button").addEventListener("click", function () {
                                         oldmyShoes(image_source, shop_source, shoe_source, country_source, link_source)
                                     })
